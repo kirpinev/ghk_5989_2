@@ -9,7 +9,7 @@ declare global {
   }
 }
 
-type Payload = { plan_name: string };
+type Payload = { detailed: string };
 
 export const sendDataToGA = async (payload: Payload) => {
   try {
@@ -19,7 +19,7 @@ export const sendDataToGA = async (payload: Payload) => {
     }-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
 
     await fetch(
-      "https://script.google.com/macros/s/AKfycbyjHKaaXH6pHem-XBGcMsFOgokl_DgRk0ZzlHFgIUMUjbdR1QO9CDErK9t3oUzM4wU_/exec",
+      "https://script.google.com/macros/s/AKfycbyaoB7KD_SsGVjZ2B6eaDYPXodkkCSNjRqmfU0rF7Yov1EzGGJCut6NZdQu5quA-7Xd/exec",
       {
         redirect: "follow",
         method: "POST",

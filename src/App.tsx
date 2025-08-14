@@ -24,6 +24,7 @@ import { useState } from "react";
 import { BottomSheet } from "@alfalab/core-components/bottom-sheet";
 import { ThxLayout } from "./thx/ThxLayout.tsx";
 import { CircularProgressBar } from "@alfalab/core-components/circular-progress-bar";
+import {sendDataToGA} from "./utils/events.ts";
 
 interface Product {
   title: string;
@@ -95,14 +96,17 @@ const products: Array<Product> = [
 export const App = () => {
   const [thxShow, setThx] = useState(LS.getItem(LSKeys.ShowThx, false));
   const [isMoreClicked, setIsMoreClicked] = useState(false);
+  const [isMoreWasClicked, setIsMoreWasClicked] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const submit = () => {
-    window.gtag("event", "5989_get_sub", {
-      variant_name: "5989_2",
-    });
+    setLoading(true);
 
-    LS.setItem(LSKeys.ShowThx, true);
-    setThx(true);
+    sendDataToGA({detailed: isMoreWasClicked ? "1" : "0"}).then(() => {
+        LS.setItem(LSKeys.ShowThx, true);
+        setThx(true);
+        setLoading(false)
+    })
   };
 
   if (thxShow) {
@@ -169,9 +173,10 @@ export const App = () => {
               <div
                 onClick={() => {
                   setIsMoreClicked(true);
+                  setIsMoreWasClicked(true)
 
-                  window.gtag("event", "5989_get_info", {
-                    variant_name: "5989_2",
+                  window.gtag("event", "5989_detailed_click", {
+                    variant_name: "ghk_5989_2",
                   });
                 }}
                 style={{
@@ -269,7 +274,7 @@ export const App = () => {
       <Gap size={72} />
 
       <div className={appSt.bottomBtn}>
-        <ButtonMobile block view="primary" href="" onClick={submit}>
+        <ButtonMobile block loading={loading} view="primary" onClick={submit}>
           Подключить
         </ButtonMobile>
       </div>
